@@ -1,0 +1,53 @@
+# A random function found on stackoverflow to remove all currently loaded pacakges... need this to prevent plyr/dplyr conflicts
+detachAllPackages <- function() {
+  basic.packages <- c("package:stats","package:graphics","package:grDevices","package:utils","package:datasets","package:methods","package:base")
+  package.list <- search()[ifelse(unlist(gregexpr("package:",search()))==1,TRUE,FALSE)]
+  package.list <- setdiff(package.list,basic.packages)
+  if (length(package.list)>0)  for (package in package.list) detach(package, character.only=TRUE)
+}
+detachAllPackages()
+
+#Function to check if package is already installed, if not, installs it. After install it and loads it
+install_load <- function(Required_Packages) {
+  for(package in Required_Packages){
+    if (!package %in% installed.packages()) install.packages(package, character.only = TRUE)
+    library(package, character.only = TRUE)
+  }
+}
+
+#Install and load the following packages
+install_load(c("gplots","RColorBrewer","readxl","colorspace","dplyr","tcltk"))
+
+
+#Gives a file prompt for the gene_absence_presence file
+file_extention <- file.choose()
+table_input <- read.csv(file_extention, row.names=1, sep=",", na.strings=c("","NA"))
+
+# Convert CSV file to a binary matrix, remove columns that are of no importance
+distance_matrix <- as.data.frame(table_input)
+distance_matrix[upper.tri(distance_matrix)] <- NA
+distance_matrix <- as.matrix(distance_matrix[-c(1),-c(ncol(distance_matrix))])
+my_palette <- colorRampPalette(c("#ff0080", "#ff8c00", "#40e0d0"))(n = 25)
+
+# Save the heatmap to a file of your choosing
+fileName <- tclvalue(tkgetSaveFile()) 
+if(!grepl(".pdf", fileName)){
+  fileName <- paste(c(fileName,"pdf"), collapse=".")
+}
+#You can change the size of the pdf here... thought it was too much waste of time to make this interactive too
+#pdf(fileName, 12, (length(rownames(binary_matrix))/50))
+heatmap.2(distance_matrix, 
+          Rowv=FALSE, 
+          Colv=FALSE, 
+          na.rm=TRUE, 
+          col=my_palette, 
+          main = "Sequence similarity", 
+          trace="none",
+          srtRow=180,
+          #          offsetRow=-55,
+          colsep=1:ncol(distance_matrix),
+          rowsep=1:nrow(distance_matrix),
+          sepcolor="white",
+          sepwidth=c(0.001,0.001))
+# Save the heatmap to a file of your choosing
+#dev.off()
