@@ -1,3 +1,3 @@
 
 ## Serratia genome project
-These files are supplementary to an article to be submitted 2020
+These files are supplementary to the thesis submitted in 2020
