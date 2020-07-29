@@ -1,0 +1,9 @@
+# Batch assembly scripts
+The following documents are an embedded custom Bash shell script containing the steps used to generate the assemblies for the isolates 
+sequencing data. All scripts contain hardcoded paths and data specific naming conventions and should therefore only serve as examples. 
+The first script autogenerates a configuration file for the A5 assembler, then takes the forward and reverse sequencing files for an isolate and assembles them. 
+The second script runs SSPACE one the newly made assembly and uses the read data to extent contigs into bigger scaffolds based on the knowledge of 
+paired end reads being ~350 bp apart from each other. The third script employs Gapfiller to resolve ambiguous base calls by trying to map reads to 
+these regions that have minimal overhang with unambiguous base calls.  
+
+
